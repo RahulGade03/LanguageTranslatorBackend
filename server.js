@@ -1,9 +1,10 @@
 import express from 'express'
+import 'dotenv/config';
 const app = express()
 const port = 3000
 import mongoose from "mongoose"
 import cors from 'cors'
-mongoose.connect('mongodb+srv://rahulgade03022004:freeAccountIsThis@cluster0.6ezji.mongodb.net/', {
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.6ezji.mongodb.net/`, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -13,7 +14,13 @@ mongoose.connect('mongodb+srv://rahulgade03022004:freeAccountIsThis@cluster0.6ez
 import History from './models/history.js'
 
 app.use(express.json())
-app.use(cors())
+app.use(
+  cors({
+    origin: 'https://language-translator-frontend.vercel.app/', // Allow requests from your frontend
+    methods: ['GET', 'POST'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type'], // Allowed headers
+  })
+);
 
 app.post('/history', async (req, res) => {
   await History.create({
