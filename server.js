@@ -4,7 +4,7 @@ const app = express()
 const port = 3000
 import mongoose from "mongoose"
 import cors from 'cors'
-mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.6ezji.mongodb.net/`, {
+mongoose.connect(`${process.env.CONNECTION_STRING}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -13,14 +13,16 @@ mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONG
 
 import History from './models/history.js'
 
+app.use(cors());
+
+
 app.use(express.json())
-app.use(
-  cors({
-    origin: '*', // Allow requests from your frontend
-    methods: ['GET', 'POST'], // Allowed HTTP methods
-    allowedHeaders: ['Content-Type'], // Allowed headers
-  })
-);
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 
 app.post('/history', async (req, res) => {
   await History.create({
