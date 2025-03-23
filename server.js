@@ -24,7 +24,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post('/history', async (req, res) => {
+app.post('/', async (req, res) => {
   await History.create({
     searched: `${req.body.searched}`,
     date: Date.now(),
@@ -32,7 +32,7 @@ app.post('/history', async (req, res) => {
   res.json({message:'Added to database', text:`${req.query.searched}`});
 })
 
-app.get('/history', async (req, res) => {
+app.get('/', async (req, res) => {
   const data = await History.find();
   console.log(data)
   res.json(data);
